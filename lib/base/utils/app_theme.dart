@@ -255,7 +255,7 @@ class AppTheme {
       foreground: kcDarkPrimaryText,
       background: kcDarkBackground,
       overlay: SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: Colors.transparent,
+        statusBarColor: kcPrimaryColor,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
         systemNavigationBarColor: kcDarkBackground,
@@ -267,7 +267,7 @@ class AppTheme {
     iconTheme: const IconThemeData(color: kcDarkPrimary, size: 24),
     iconButtonTheme: _iconButtonTheme(color: kcDarkPrimary),
     elevatedButtonTheme: _elevatedButtonTheme(
-      background: kcDarkPrimary,
+      background: kcPrimaryColor,
       foreground: kcDarkBackground,
     ),
     filledButtonTheme: _filledButtonTheme(
@@ -433,7 +433,7 @@ class AppTheme {
         textStyle:
             GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w600),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.button.r),
+          borderRadius: BorderRadius.circular(AppRadius.chip.r),
         ),
       ),
     );
