@@ -5,6 +5,7 @@ import 'package:weight_mate/app/app.dialogs.dart';
 import 'package:weight_mate/app/app.locator.dart';
 import 'package:weight_mate/app/app.router.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:weight_mate/base/utils/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,10 @@ class MainApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) {
           return MaterialApp(
+            theme: AppTheme.appThemeLight,
+            darkTheme: AppTheme.appThemeDark,
+            themeMode: ThemeMode.light,
+            debugShowCheckedModeBanner: false,
             initialRoute: Routes.startupView,
             onGenerateRoute: StackedRouter().onGenerateRoute,
             navigatorKey: StackedService.navigatorKey,
