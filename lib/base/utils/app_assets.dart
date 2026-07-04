@@ -6,4 +6,5 @@ class AppAssets {
 
   static const String bookPlaceHolderImage =
       'assets/images/book-cover-placeholder.png';
+  static const String splashLogo = 'assets/images/image.svg';
 }

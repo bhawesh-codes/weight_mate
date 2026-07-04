@@ -85,6 +85,8 @@ class TitleTextWidget extends StatelessWidget {
       return 24.sp;
     } else if (textType == TextType.large) {
       return 20.sp;
+    } else if (textType == TextType.xxlarge) {
+      return 32.sp;
     } else if (textType == TextType.medium) {
       return 16.sp;
     } else if (textType == TextType.smedium) {

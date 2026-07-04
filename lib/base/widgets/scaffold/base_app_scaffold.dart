@@ -36,6 +36,8 @@ class BaseAppScaffold extends StatelessWidget {
 
   /// Bottom Sheet
   final Widget? bottomSheet;
+  final Color? statusBarColor;
+  final Brightness? statusBarIconBrightness;
 
   /// Resize to avoid bottom inset
   final bool? resizeToAvoidBottomInset;
@@ -52,45 +54,46 @@ class BaseAppScaffold extends StatelessWidget {
       this.extendBodyBehindAppBar = false,
       this.extendBody = false,
       this.bottomSheet,
-      this.resizeToAvoidBottomInset});
+      this.resizeToAvoidBottomInset,
+      this.statusBarColor,
+      this.statusBarIconBrightness});
 
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: SafeArea(
-          top: false,
-          bottom: false,
-          child: Scaffold(
-            resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-            bottomSheet: bottomSheet,
-            extendBody: extendBody,
-            extendBodyBehindAppBar: extendBodyBehindAppBar,
-            appBar: appBar ??
-                AppBar(
-                  toolbarHeight: 0,
-                  systemOverlayStyle: SystemUiOverlayStyle(
-                    statusBarColor: AppTheme.primaryColor(context),
-                    statusBarIconBrightness:
-                        Brightness.dark, // For Android (dark icons)
-                    statusBarBrightness:
-                        Brightness.light, // For iOS (dark icons)
-                  ),
+      child: SafeArea(
+        top: false,
+        bottom: false,
+        child: Scaffold(
+          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+          bottomSheet: bottomSheet,
+          extendBody: extendBody,
+          extendBodyBehindAppBar: extendBodyBehindAppBar,
+          appBar: appBar ??
+              AppBar(
+                toolbarHeight: 0,
+                systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor:
+                      statusBarColor ?? AppTheme.primaryColor(context),
+                  statusBarIconBrightness: statusBarIconBrightness ??
+                      Brightness.dark, // For Android (dark icons)
+                  statusBarBrightness: Brightness.light, // For iOS (dark icons)
                 ),
-            backgroundColor: scaffoldBackgroundColor ??
-                AppTheme.primaryColor(context),
-            body: Padding(
-              padding: addHorizontalPadding
-                  ? UIHelper.paddingHorizontal(spacing: Spacing.medium)
-                  : EdgeInsets.zero,
-              child: body,
-            ),
-            drawer: drawer,
-            endDrawer: endDrawer,
-            floatingActionButton:
-                floatingActionButton ?? const SizedBox.shrink(),
-            bottomNavigationBar: bottomNavigationBar,
+              ),
+          backgroundColor:
+              scaffoldBackgroundColor ?? AppTheme.primaryColor(context),
+          body: Padding(
+            padding: addHorizontalPadding
+                ? UIHelper.paddingHorizontal(spacing: Spacing.medium)
+                : EdgeInsets.zero,
+            child: body,
           ),
+          drawer: drawer,
+          endDrawer: endDrawer,
+          floatingActionButton: floatingActionButton ?? const SizedBox.shrink(),
+          bottomNavigationBar: bottomNavigationBar,
         ),
+      ),
     );
   }
 }
