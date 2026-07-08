@@ -1,36 +1,32 @@
-import 'package:weight_mate/app/app.bottomsheets.dart';
-import 'package:weight_mate/app/app.dialogs.dart';
-import 'package:weight_mate/app/app.locator.dart';
-import 'package:weight_mate/ui/common/app_strings.dart';
 import 'package:stacked/stacked.dart';
+import 'package:weight_mate/app/app.locator.dart';
+import 'package:weight_mate/app/app.router.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
-  final _dialogService = locator<DialogService>();
-  final _bottomSheetService = locator<BottomSheetService>();
+  final _navigationService = locator<NavigationService>();
 
-  String get counterLabel => 'Counter is: $_counter';
-
-  int _counter = 0;
-
-  void incrementCounter() {
-    _counter++;
-    rebuildUi();
+  void openQuickCalculator() {
+    _navigationService.navigateToQuickCalculatorView();
   }
 
-  void showDialog() {
-    _dialogService.showCustomDialog(
-      variant: DialogType.infoAlert,
-      title: 'Stacked Rocks!',
-      description: 'Give stacked $_counter stars on Github',
-    );
+  void openCreateBills() {
+    _navigationService.navigateToCreateBillView();
   }
 
-  void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.notice,
-      title: ksHomeBottomSheetTitle,
-      description: ksHomeBottomSheetDescription,
-    );
+  void openProducts() {
+    // TODO: navigate to Products view
+  }
+
+  void openBillHistory() {
+    // TODO: navigate to Bill History view
+  }
+
+  void openUploadQr() {
+    // TODO: navigate to Upload QR view
+  }
+
+  void openSettings() {
+    // TODO: navigate to Settings view
   }
 }
