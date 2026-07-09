@@ -6,6 +6,7 @@ import 'package:weight_mate/app/app.router.dart';
 import 'package:weight_mate/models/bill.dart';
 import 'package:weight_mate/models/bill_item.dart';
 import 'package:weight_mate/models/calculator_row.dart';
+import 'package:weight_mate/services/storage_service.dart';
 
 class CreateBillViewModel extends BaseViewModel {
   final List<BillItem> _items = <BillItem>[];
@@ -103,11 +104,15 @@ class CreateBillViewModel extends BaseViewModel {
     final validItems = _items.where((item) => item.name.isNotEmpty && item.price > 0).toList();
     if (validItems.isEmpty) return;
 
+    final storageService = locator<StorageService>();
     final subtotal = validItems.fold<double>(0, (sum, item) => sum + item.subtotal);
     final now = DateTime.now();
     final bill = Bill(
       billNumber: 'WM-${now.year}-${now.millisecondsSinceEpoch.toString().substring(6)}',
       createdAt: now,
+      shopName: storageService.storeName,
+      shopAddress: storageService.storeAddress,
+      shopPhone: storageService.storePhone,
       items: validItems,
       subtotal: subtotal,
       grandTotal: subtotal,
