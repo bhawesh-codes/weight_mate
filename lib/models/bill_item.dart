@@ -46,4 +46,20 @@ class BillItem {
       UnitType.dozen => price * weight,
     };
   }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'price': price,
+        'unit': unit.index,
+        'weight': weight,
+        'subtotal': subtotal,
+      };
+
+  factory BillItem.fromJson(Map<String, dynamic> json) => BillItem(
+        name: json['name'] as String,
+        price: (json['price'] as num).toDouble(),
+        unit: UnitType.values[json['unit'] as int],
+        weight: (json['weight'] as num).toDouble(),
+        subtotal: (json['subtotal'] as num).toDouble(),
+      );
 }
