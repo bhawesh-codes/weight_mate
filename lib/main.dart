@@ -7,10 +7,12 @@ import 'package:weight_mate/app/app.router.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:weight_mate/base/utils/app_theme.dart';
 import 'package:weight_mate/services/storage_service.dart';
+import 'package:weight_mate/services/isar_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
+  await locator<IsarService>().init();
   await locator<StorageService>().init();
   setupDialogUi();
   setupBottomSheetUi();
