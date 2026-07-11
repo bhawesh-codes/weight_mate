@@ -38,6 +38,7 @@ class StartupView extends StackedView<StartupViewModel> {
             UIHelper.verticalSpaceLarge,
             const TitleTextWidget(
               text: 'WeightMate',
+              color: kcDarkPrimaryText,
               textType: TextType.xxlarge,
               fontWeight: FontWeight.w500,
             ),
