@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:stacked/stacked.dart';
+import 'package:weight_mate/base/utils/ui_helper.dart';
 import 'package:weight_mate/base/utils/text_type.dart';
 import 'package:weight_mate/base/widgets/text/body_text.dart';
 import 'package:weight_mate/base/widgets/text/title_text.dart';
@@ -23,9 +24,9 @@ class QuickCalculatorView extends StackedView<QuickCalculatorViewModel> {
         titleSpacing: 0,
         title: Row(
           children: [
-            SizedBox(width: 16.w),
-            Icon(Icons.storefront, color: kcPrimaryColor, size: 28.r),
-            SizedBox(width: 8.w),
+            UIHelper.horizontalSpaceMedium,
+            Icon(Icons.calculate, color: kcPrimaryColor, size: 28.r),
+            UIHelper.horizontalSpaceSmall,
             const TitleTextWidget(
               text: 'Quick Calculator',
               color: kcPrimaryColor,
@@ -36,7 +37,7 @@ class QuickCalculatorView extends StackedView<QuickCalculatorViewModel> {
         ),
         actions: [
           GestureDetector(
-            onTap: viewModel.clearAll,
+            onTap: () => _showClearConfirm(context, viewModel),
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 8.w),
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
@@ -59,11 +60,54 @@ class QuickCalculatorView extends StackedView<QuickCalculatorViewModel> {
               ),
             ),
           ),
-          SizedBox(width: 8.w),
+          UIHelper.horizontalSpaceSmall,
         ],
       ),
       body: _CalculatorItemList(viewModel: viewModel),
       bottomSheet: _BottomSheet(viewModel: viewModel),
+    );
+  }
+
+  void _showClearConfirm(
+      BuildContext context, QuickCalculatorViewModel viewModel) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        title: const BodyTextWidget(
+          text: 'Clear all items?',
+          textType: TextType.small,
+          fontWeight: FontWeight.w600,
+        ),
+        content: const BodyTextWidget(
+          text: 'This will remove all calculator rows.',
+          textType: TextType.xsmall,
+          color: kcLightSecondaryText,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const BodyTextWidget(
+              text: 'Cancel',
+              textType: TextType.small,
+              color: kcLightSecondaryText,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              viewModel.clearAll();
+              Navigator.pop(ctx);
+            },
+            child: const BodyTextWidget(
+              text: 'Clear',
+              textType: TextType.small,
+              color: kcErrorColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -130,34 +174,7 @@ class _CalculatorItemListState extends State<_CalculatorItemList> {
             onUnitChanged: (v) => widget.viewModel.updateUnit(index, v),
           );
         }
-        return Padding(
-          padding: EdgeInsets.only(top: 24.h),
-          child: Center(
-            child: GestureDetector(
-              onTap: widget.viewModel.addRow,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
-                decoration: BoxDecoration(
-                  color: kcPrimaryContainer,
-                  borderRadius: BorderRadius.circular(24.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.add, color: kcPrimaryColor, size: 20.r),
-                    SizedBox(width: 8.w),
-                    const BodyTextWidget(
-                      text: 'Add Item',
-                      textType: TextType.medium,
-                      color: kcPrimaryColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
+        return UIHelper.verticalSpace(24.h);
       },
     );
   }
@@ -206,7 +223,7 @@ class _BottomSheet extends StatelessWidget {
                     '₹ ${viewModel.grandTotal.toStringAsFixed(2)}',
                     style: TextStyle(
                       fontFamily: 'Inter',
-                      fontSize: 32.sp,
+                      fontSize: 38.sp,
                       fontWeight: FontWeight.w700,
                       color: kcPrimaryColor,
                       letterSpacing: -0.02,
@@ -214,14 +231,49 @@ class _BottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h),
+              UIHelper.verticalSpace(12.h),
+              SizedBox(
+                width: double.infinity,
+                height: 48.h,
+                child: OutlinedButton.icon(
+                  onPressed: viewModel.addRow,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: kcPrimaryColor,
+                    side: BorderSide(
+                        color: kcPrimaryColor.withValues(alpha: 0.3)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const BodyTextWidget(
+                    text: 'Add Item',
+                    textType: TextType.small,
+                    color: kcPrimaryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              UIHelper.verticalSpace(12.h),
               Row(
                 children: [
                   Expanded(
                     child: SizedBox(
-                      height: 56.h,
+                      height: 52.h,
                       child: OutlinedButton.icon(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await viewModel.saveToHistory();
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: const Text('Saved to history'),
+                                backgroundColor: kcSuccessColor,
+                                behavior: SnackBarBehavior.floating,
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                        },
                         style: OutlinedButton.styleFrom(
                           foregroundColor: kcPrimaryColor,
                           side:
@@ -230,9 +282,9 @@ class _BottomSheet extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                         ),
-                        icon: const Icon(Icons.history, size: 20),
+                        icon: const Icon(Icons.history, size: 18),
                         label: const BodyTextWidget(
-                          text: 'Save to History',
+                          text: 'Save',
                           textType: TextType.small,
                           color: kcPrimaryColor,
                           fontWeight: FontWeight.w600,
@@ -243,9 +295,9 @@ class _BottomSheet extends StatelessWidget {
                   SizedBox(width: 12.w),
                   Expanded(
                     child: SizedBox(
-                      height: 56.h,
+                      height: 52.h,
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: viewModel.showQr,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: kcPrimaryColor,
                           foregroundColor: Colors.white,
@@ -255,9 +307,9 @@ class _BottomSheet extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                         ),
-                        icon: const Icon(Icons.qr_code_2, size: 20),
+                        icon: const Icon(Icons.qr_code_2, size: 18),
                         label: const BodyTextWidget(
-                          text: 'Show QR',
+                          text: 'QR',
                           textType: TextType.small,
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -290,19 +342,6 @@ class _CalculatorRowWidget extends StatelessWidget {
     required this.onUnitChanged,
   });
 
-  String _priceLabel(UnitType unit) => switch (unit) {
-        UnitType.kg || UnitType.gm => 'Price/kg',
-        UnitType.piece => 'Price/piece',
-        UnitType.dozen => 'Price/dozen',
-      };
-
-  String _weightLabel(UnitType unit) => switch (unit) {
-        UnitType.kg => 'Weight',
-        UnitType.gm => 'Weight (gm)',
-        UnitType.piece => 'Pieces',
-        UnitType.dozen => 'Dozen',
-      };
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -312,74 +351,108 @@ class _CalculatorRowWidget extends StatelessWidget {
         color: Colors.white,
         border: Border.all(color: kcLightBorder),
         borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                flex: 7,
-                child: _UnitChips(
-                  selected: row.unit,
-                  onChanged: onUnitChanged,
+          SizedBox(
+            height: 27.h,
+            child: SegmentedButton<UnitType>(
+              segments: UnitType.values.map((unit) {
+                String label;
+                switch (unit) {
+                  case UnitType.kg:
+                    label = 'kg';
+                  case UnitType.gm:
+                    label = 'g';
+                  case UnitType.piece:
+                    label = 'pc';
+                  case UnitType.dozen:
+                    label = 'doz';
+                }
+                return ButtonSegment(
+                  value: unit,
+                  label: Text(label, style: TextStyle(fontSize: 12.sp)),
+                );
+              }).toList(),
+              selected: {row.unit},
+              onSelectionChanged: (selected) => onUnitChanged(selected.first),
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return kcPrimaryColor;
+                  }
+                  return kcLightSurfaceVariant;
+                }),
+                foregroundColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return Colors.white;
+                  }
+                  return kcLightSecondaryText;
+                }),
+                visualDensity: VisualDensity.compact,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
                 ),
               ),
-              SizedBox(width: 12.w),
-              Expanded(
-                flex: 5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const BodyTextWidget(
-                      text: 'Subtotal',
-                      textType: TextType.xsmall,
-                      color: kcLightSecondaryText,
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      '₹ ${row.subtotal.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600,
-                        color: kcPrimaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-          SizedBox(height: 12.h),
+          UIHelper.verticalSpace(12.h),
           Row(
             children: [
               Expanded(
                 child: _InputField(
-                  label: _priceLabel(row.unit),
+                  label: 'Price',
+                  hint: 'e.g. 120',
                   prefix: '₹',
                   value: row.priceText,
                   onChanged: onPriceChanged,
                 ),
               ),
-              SizedBox(width: 12.w),
+              UIHelper.horizontalSpaceSmall,
               Expanded(
                 child: _InputField(
-                  label: _weightLabel(row.unit),
-                  suffix: IconButton(
-                    icon: Icon(Icons.close, size: 16.r, color: kcLightHintText),
-                    onPressed: () => onWeightChanged(''),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
+                  label: 'Weight',
+                  hint: 'e.g. 2.5',
                   value: row.weightText,
                   onChanged: onWeightChanged,
+                ),
+              ),
+              UIHelper.horizontalSpaceSmall,
+              Container(
+                width: 90.w,
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: kcPrimaryContainer,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const BodyTextWidget(
+                      text: 'Total',
+                      textType: TextType.xxsmall,
+                      color: kcLightSecondaryText,
+                    ),
+                    UIHelper.verticalSpaceXXSmall,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '₹${row.subtotal.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
+                          color: kcPrimaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -392,6 +465,7 @@ class _CalculatorRowWidget extends StatelessWidget {
 
 class _InputField extends StatelessWidget {
   final String label;
+  final String? hint;
   final String? prefix;
   final Widget? suffix;
   final String value;
@@ -399,6 +473,7 @@ class _InputField extends StatelessWidget {
 
   const _InputField({
     required this.label,
+    this.hint,
     this.prefix,
     this.suffix,
     required this.value,
@@ -412,26 +487,26 @@ class _InputField extends StatelessWidget {
       children: [
         BodyTextWidget(
           text: label,
-          textType: TextType.xsmall,
+          textType: TextType.xxsmall,
           color: kcLightSecondaryText,
         ),
-        SizedBox(height: 4.h),
+        UIHelper.verticalSpace(4.h),
         Container(
           decoration: BoxDecoration(
             color: kcLightSurfaceVariant,
             borderRadius: BorderRadius.circular(12.r),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Row(
             children: [
-              if (prefix != null) ...[
-                BodyTextWidget(
-                  text: prefix!,
-                  textType: TextType.small,
-                  color: kcLightSecondaryText,
+              if (prefix != null)
+                Padding(
+                  padding: EdgeInsets.only(left: 12.w),
+                  child: BodyTextWidget(
+                    text: prefix!,
+                    textType: TextType.xsmall,
+                    color: kcLightSecondaryText,
+                  ),
                 ),
-                SizedBox(width: 4.w),
-              ],
               Expanded(
                 child: TextField(
                   controller: TextEditingController.fromValue(
@@ -443,14 +518,23 @@ class _InputField extends StatelessWidget {
                   onChanged: onChanged,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
+                    hintText: hint,
+                    hintStyle: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 12.sp,
+                      color: kcLightHintText,
+                    ),
                     border: InputBorder.none,
                     isDense: true,
-                    contentPadding: EdgeInsets.symmetric(vertical: 12),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: prefix != null ? 4.w : 12.w,
+                      vertical: 10,
+                    ),
                   ),
                   style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 18.sp,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: kcLightPrimaryText,
                   ),
@@ -461,141 +545,6 @@ class _InputField extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _UnitChips extends StatelessWidget {
-  final UnitType selected;
-  final ValueChanged<UnitType> onChanged;
-
-  const _UnitChips({required this.selected, required this.onChanged});
-
-  static const _units = [
-    UnitType.kg,
-    UnitType.gm,
-    UnitType.piece,
-    UnitType.dozen
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const BodyTextWidget(
-          text: 'Unit',
-          textType: TextType.xsmall,
-          color: kcLightSecondaryText,
-        ),
-        SizedBox(height: 4.h),
-        Container(
-          decoration: BoxDecoration(
-            color: kcLightSurfaceVariant,
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          padding: EdgeInsets.all(4.r),
-          child: Column(
-            children: [
-              Row(
-                children: _units
-                    .sublist(0, 2)
-                    .map((unit) => _buildChip(unit))
-                    .toList(),
-              ),
-              SizedBox(height: 4.h),
-              Row(
-                children: _units
-                    .sublist(2, 4)
-                    .map((unit) => _buildChip(unit))
-                    .toList(),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildChip(UnitType unit) {
-    final isSelected = selected == unit;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => onChanged(unit),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 8.h),
-          decoration: BoxDecoration(
-            color: isSelected ? kcPrimaryContainer : Colors.transparent,
-            borderRadius: BorderRadius.circular(6.r),
-          ),
-          child: Center(
-            child: BodyTextWidget(
-              text: unit.name,
-              textType: TextType.xsmall,
-              color: isSelected ? kcPrimaryColor : kcLightSecondaryText,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isActive;
-  final Color activeColor;
-
-  const _NavItem({
-    required this.icon,
-    required this.label,
-    required this.isActive,
-    required this.activeColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = isActive ? activeColor : kcLightSecondaryText;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-            decoration: BoxDecoration(
-              color: isActive ? kcPrimaryContainer : Colors.transparent,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, size: 22.r, color: color),
-                if (isActive) ...[
-                  SizedBox(width: 4.w),
-                  BodyTextWidget(
-                    text: label,
-                    textType: TextType.xsmall,
-                    color: color,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ],
-              ],
-            ),
-          ),
-          if (!isActive)
-            Padding(
-              padding: EdgeInsets.only(top: 2.h),
-              child: BodyTextWidget(
-                text: label,
-                textType: TextType.xxsmall,
-                color: color,
-              ),
-            ),
-        ],
-      ),
     );
   }
 }
