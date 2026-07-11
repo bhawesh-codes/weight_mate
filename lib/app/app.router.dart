@@ -1,16 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// dart format width=80
 
 // **************************************************************************
 // StackedNavigatorGenerator
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i12;
+import 'package:flutter/material.dart' as _i15;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i14;
-import 'package:weight_mate/models/bill.dart' as _i13;
+import 'package:stacked_services/stacked_services.dart' as _i18;
+import 'package:weight_mate/models/bill.dart' as _i16;
+import 'package:weight_mate/models/saved_product.dart' as _i17;
+import 'package:weight_mate/ui/views/add_product/add_product_view.dart' as _i14;
+import 'package:weight_mate/ui/views/bill_history/bill_history_view.dart'
+    as _i12;
 import 'package:weight_mate/ui/views/create_bill/create_bill_view.dart' as _i6;
 import 'package:weight_mate/ui/views/generate_bill/generate_bill_view.dart'
     as _i7;
@@ -19,6 +22,8 @@ import 'package:weight_mate/ui/views/qr_payment_setup/qr_payment_setup_view.dart
     as _i10;
 import 'package:weight_mate/ui/views/quick_calculator/quick_calculator_view.dart'
     as _i5;
+import 'package:weight_mate/ui/views/saved_products/saved_products_view.dart'
+    as _i13;
 import 'package:weight_mate/ui/views/scan_pay/scan_pay_view.dart' as _i11;
 import 'package:weight_mate/ui/views/settings/settings_view.dart' as _i8;
 import 'package:weight_mate/ui/views/shop_profile/shop_profile_view.dart'
@@ -47,6 +52,12 @@ class Routes {
 
   static const scanPayView = '/scan-pay-view';
 
+  static const billHistoryView = '/bill-history-view';
+
+  static const savedProductsView = '/saved-products-view';
+
+  static const addProductView = '/add-product-view';
+
   static const all = <String>{
     homeView,
     startupView,
@@ -58,6 +69,9 @@ class Routes {
     shopProfileView,
     qrPaymentSetupView,
     scanPayView,
+    billHistoryView,
+    savedProductsView,
+    addProductView,
   };
 }
 
@@ -103,94 +117,104 @@ class StackedRouter extends _i1.RouterBase {
       Routes.scanPayView,
       page: _i11.ScanPayView,
     ),
+    _i1.RouteDef(
+      Routes.billHistoryView,
+      page: _i12.BillHistoryView,
+    ),
+    _i1.RouteDef(
+      Routes.savedProductsView,
+      page: _i13.SavedProductsView,
+    ),
+    _i1.RouteDef(
+      Routes.addProductView,
+      page: _i14.AddProductView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.HomeView: (data) {
-      final args = data.getArgs<HomeViewArguments>(
-        orElse: () => const HomeViewArguments(),
-      );
-      return _i12.MaterialPageRoute<dynamic>(
-        builder: (context) => _i2.HomeView(key: args.key),
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i2.HomeView(),
         settings: data,
       );
     },
     _i3.StartupView: (data) {
-      final args = data.getArgs<StartupViewArguments>(
-        orElse: () => const StartupViewArguments(),
-      );
-      return _i12.MaterialPageRoute<dynamic>(
-        builder: (context) => _i3.StartupView(key: args.key),
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i3.StartupView(),
         settings: data,
       );
     },
     _i4.WalkthroughView: (data) {
-      final args = data.getArgs<WalkthroughViewArguments>(
-        orElse: () => const WalkthroughViewArguments(),
-      );
-      return _i12.MaterialPageRoute<dynamic>(
-        builder: (context) => _i4.WalkthroughView(key: args.key),
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i4.WalkthroughView(),
         settings: data,
       );
     },
     _i5.QuickCalculatorView: (data) {
-      final args = data.getArgs<QuickCalculatorViewArguments>(
-        orElse: () => const QuickCalculatorViewArguments(),
-      );
-      return _i12.MaterialPageRoute<dynamic>(
-        builder: (context) => _i5.QuickCalculatorView(key: args.key),
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i5.QuickCalculatorView(),
         settings: data,
       );
     },
     _i6.CreateBillView: (data) {
-      final args = data.getArgs<CreateBillViewArguments>(
-        orElse: () => const CreateBillViewArguments(),
-      );
-      return _i12.MaterialPageRoute<dynamic>(
-        builder: (context) => _i6.CreateBillView(key: args.key),
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i6.CreateBillView(),
         settings: data,
       );
     },
     _i7.GenerateBillView: (data) {
       final args = data.getArgs<GenerateBillViewArguments>(nullOk: false);
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i7.GenerateBillView(key: args.key, bill: args.bill),
         settings: data,
       );
     },
     _i8.SettingsView: (data) {
-      final args = data.getArgs<SettingsViewArguments>(
-        orElse: () => const SettingsViewArguments(),
-      );
-      return _i12.MaterialPageRoute<dynamic>(
-        builder: (context) => _i8.SettingsView(key: args.key),
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i8.SettingsView(),
         settings: data,
       );
     },
     _i9.ShopProfileView: (data) {
-      final args = data.getArgs<ShopProfileViewArguments>(
-        orElse: () => const ShopProfileViewArguments(),
-      );
-      return _i12.MaterialPageRoute<dynamic>(
-        builder: (context) => _i9.ShopProfileView(key: args.key),
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i9.ShopProfileView(),
         settings: data,
       );
     },
     _i10.QrPaymentSetupView: (data) {
-      final args = data.getArgs<QrPaymentSetupViewArguments>(
-        orElse: () => const QrPaymentSetupViewArguments(),
-      );
-      return _i12.MaterialPageRoute<dynamic>(
-        builder: (context) => _i10.QrPaymentSetupView(key: args.key),
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i10.QrPaymentSetupView(),
         settings: data,
       );
     },
     _i11.ScanPayView: (data) {
       final args = data.getArgs<ScanPayViewArguments>(nullOk: false);
-      return _i12.MaterialPageRoute<dynamic>(
+      return _i15.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i11.ScanPayView(key: args.key, grandTotal: args.grandTotal),
+        settings: data,
+      );
+    },
+    _i12.BillHistoryView: (data) {
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i12.BillHistoryView(),
+        settings: data,
+      );
+    },
+    _i13.SavedProductsView: (data) {
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i13.SavedProductsView(),
+        settings: data,
+      );
+    },
+    _i14.AddProductView: (data) {
+      final args = data.getArgs<AddProductViewArguments>(
+        orElse: () => const AddProductViewArguments(),
+      );
+      return _i15.MaterialPageRoute<dynamic>(
+        builder: (context) =>
+            _i14.AddProductView(key: args.key, product: args.product),
         settings: data,
       );
     },
@@ -203,125 +227,15 @@ class StackedRouter extends _i1.RouterBase {
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-class HomeViewArguments {
-  const HomeViewArguments({this.key});
-
-  final _i12.Key? key;
-
-  @override
-  String toString() {
-    return '{"key": "$key"}';
-  }
-
-  @override
-  bool operator ==(covariant HomeViewArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode;
-  }
-}
-
-class StartupViewArguments {
-  const StartupViewArguments({this.key});
-
-  final _i12.Key? key;
-
-  @override
-  String toString() {
-    return '{"key": "$key"}';
-  }
-
-  @override
-  bool operator ==(covariant StartupViewArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode;
-  }
-}
-
-class WalkthroughViewArguments {
-  const WalkthroughViewArguments({this.key});
-
-  final _i12.Key? key;
-
-  @override
-  String toString() {
-    return '{"key": "$key"}';
-  }
-
-  @override
-  bool operator ==(covariant WalkthroughViewArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode;
-  }
-}
-
-class QuickCalculatorViewArguments {
-  const QuickCalculatorViewArguments({this.key});
-
-  final _i12.Key? key;
-
-  @override
-  String toString() {
-    return '{"key": "$key"}';
-  }
-
-  @override
-  bool operator ==(covariant QuickCalculatorViewArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode;
-  }
-}
-
-class CreateBillViewArguments {
-  const CreateBillViewArguments({this.key});
-
-  final _i12.Key? key;
-
-  @override
-  String toString() {
-    return '{"key": "$key"}';
-  }
-
-  @override
-  bool operator ==(covariant CreateBillViewArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode;
-  }
-}
-
 class GenerateBillViewArguments {
   const GenerateBillViewArguments({
     this.key,
     required this.bill,
   });
 
-  final _i12.Key? key;
+  final _i15.Key? key;
 
-  final _i13.Bill bill;
+  final _i16.Bill bill;
 
   @override
   String toString() {
@@ -340,79 +254,13 @@ class GenerateBillViewArguments {
   }
 }
 
-class SettingsViewArguments {
-  const SettingsViewArguments({this.key});
-
-  final _i12.Key? key;
-
-  @override
-  String toString() {
-    return '{"key": "$key"}';
-  }
-
-  @override
-  bool operator ==(covariant SettingsViewArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode;
-  }
-}
-
-class ShopProfileViewArguments {
-  const ShopProfileViewArguments({this.key});
-
-  final _i12.Key? key;
-
-  @override
-  String toString() {
-    return '{"key": "$key"}';
-  }
-
-  @override
-  bool operator ==(covariant ShopProfileViewArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode;
-  }
-}
-
-class QrPaymentSetupViewArguments {
-  const QrPaymentSetupViewArguments({this.key});
-
-  final _i12.Key? key;
-
-  @override
-  String toString() {
-    return '{"key": "$key"}';
-  }
-
-  @override
-  bool operator ==(covariant QrPaymentSetupViewArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode;
-  }
-}
-
 class ScanPayViewArguments {
   const ScanPayViewArguments({
     this.key,
     required this.grandTotal,
   });
 
-  final _i12.Key? key;
+  final _i15.Key? key;
 
   final double grandTotal;
 
@@ -433,81 +281,98 @@ class ScanPayViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i14.NavigationService {
-  Future<dynamic> navigateToHomeView({
-    _i12.Key? key,
+class AddProductViewArguments {
+  const AddProductViewArguments({
+    this.key,
+    this.product,
+  });
+
+  final _i15.Key? key;
+
+  final _i17.SavedProduct? product;
+
+  @override
+  String toString() {
+    return '{"key": "$key", "product": "$product"}';
+  }
+
+  @override
+  bool operator ==(covariant AddProductViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.key == key && other.product == product;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode ^ product.hashCode;
+  }
+}
+
+extension NavigatorStateExtension on _i18.NavigationService {
+  Future<dynamic> navigateToHomeView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return navigateTo<dynamic>(Routes.homeView,
-        arguments: HomeViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> navigateToStartupView({
-    _i12.Key? key,
+  Future<dynamic> navigateToStartupView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return navigateTo<dynamic>(Routes.startupView,
-        arguments: StartupViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> navigateToWalkthroughView({
-    _i12.Key? key,
+  Future<dynamic> navigateToWalkthroughView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return navigateTo<dynamic>(Routes.walkthroughView,
-        arguments: WalkthroughViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> navigateToQuickCalculatorView({
-    _i12.Key? key,
+  Future<dynamic> navigateToQuickCalculatorView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return navigateTo<dynamic>(Routes.quickCalculatorView,
-        arguments: QuickCalculatorViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> navigateToCreateBillView({
-    _i12.Key? key,
+  Future<dynamic> navigateToCreateBillView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return navigateTo<dynamic>(Routes.createBillView,
-        arguments: CreateBillViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -515,8 +380,8 @@ extension NavigatorStateExtension on _i14.NavigationService {
   }
 
   Future<dynamic> navigateToGenerateBillView({
-    _i12.Key? key,
-    required _i13.Bill bill,
+    _i15.Key? key,
+    required _i16.Bill bill,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -531,48 +396,42 @@ extension NavigatorStateExtension on _i14.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToSettingsView({
-    _i12.Key? key,
+  Future<dynamic> navigateToSettingsView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return navigateTo<dynamic>(Routes.settingsView,
-        arguments: SettingsViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> navigateToShopProfileView({
-    _i12.Key? key,
+  Future<dynamic> navigateToShopProfileView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return navigateTo<dynamic>(Routes.shopProfileView,
-        arguments: ShopProfileViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> navigateToQrPaymentSetupView({
-    _i12.Key? key,
+  Future<dynamic> navigateToQrPaymentSetupView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return navigateTo<dynamic>(Routes.qrPaymentSetupView,
-        arguments: QrPaymentSetupViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -580,7 +439,7 @@ extension NavigatorStateExtension on _i14.NavigationService {
   }
 
   Future<dynamic> navigateToScanPayView({
-    _i12.Key? key,
+    _i15.Key? key,
     required double grandTotal,
     int? routerId,
     bool preventDuplicates = true,
@@ -596,80 +455,115 @@ extension NavigatorStateExtension on _i14.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithHomeView({
-    _i12.Key? key,
+  Future<dynamic> navigateToBillHistoryView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.billHistoryView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToSavedProductsView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.savedProductsView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAddProductView({
+    _i15.Key? key,
+    _i17.SavedProduct? product,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   }) async {
+    return navigateTo<dynamic>(Routes.addProductView,
+        arguments: AddProductViewArguments(key: key, product: product),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithHomeView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
     return replaceWith<dynamic>(Routes.homeView,
-        arguments: HomeViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> replaceWithStartupView({
-    _i12.Key? key,
+  Future<dynamic> replaceWithStartupView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return replaceWith<dynamic>(Routes.startupView,
-        arguments: StartupViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> replaceWithWalkthroughView({
-    _i12.Key? key,
+  Future<dynamic> replaceWithWalkthroughView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return replaceWith<dynamic>(Routes.walkthroughView,
-        arguments: WalkthroughViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> replaceWithQuickCalculatorView({
-    _i12.Key? key,
+  Future<dynamic> replaceWithQuickCalculatorView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return replaceWith<dynamic>(Routes.quickCalculatorView,
-        arguments: QuickCalculatorViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> replaceWithCreateBillView({
-    _i12.Key? key,
+  Future<dynamic> replaceWithCreateBillView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return replaceWith<dynamic>(Routes.createBillView,
-        arguments: CreateBillViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -677,8 +571,8 @@ extension NavigatorStateExtension on _i14.NavigationService {
   }
 
   Future<dynamic> replaceWithGenerateBillView({
-    _i12.Key? key,
-    required _i13.Bill bill,
+    _i15.Key? key,
+    required _i16.Bill bill,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -693,48 +587,42 @@ extension NavigatorStateExtension on _i14.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithSettingsView({
-    _i12.Key? key,
+  Future<dynamic> replaceWithSettingsView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return replaceWith<dynamic>(Routes.settingsView,
-        arguments: SettingsViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> replaceWithShopProfileView({
-    _i12.Key? key,
+  Future<dynamic> replaceWithShopProfileView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return replaceWith<dynamic>(Routes.shopProfileView,
-        arguments: ShopProfileViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> replaceWithQrPaymentSetupView({
-    _i12.Key? key,
+  Future<dynamic> replaceWithQrPaymentSetupView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return replaceWith<dynamic>(Routes.qrPaymentSetupView,
-        arguments: QrPaymentSetupViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -742,7 +630,7 @@ extension NavigatorStateExtension on _i14.NavigationService {
   }
 
   Future<dynamic> replaceWithScanPayView({
-    _i12.Key? key,
+    _i15.Key? key,
     required double grandTotal,
     int? routerId,
     bool preventDuplicates = true,
@@ -752,6 +640,51 @@ extension NavigatorStateExtension on _i14.NavigationService {
   }) async {
     return replaceWith<dynamic>(Routes.scanPayView,
         arguments: ScanPayViewArguments(key: key, grandTotal: grandTotal),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithBillHistoryView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.billHistoryView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithSavedProductsView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.savedProductsView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAddProductView({
+    _i15.Key? key,
+    _i17.SavedProduct? product,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.addProductView,
+        arguments: AddProductViewArguments(key: key, product: product),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
