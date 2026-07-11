@@ -6,11 +6,17 @@ import 'package:weight_mate/app/app.router.dart';
 import 'package:weight_mate/models/bill.dart';
 import 'package:weight_mate/models/bill_item.dart';
 import 'package:weight_mate/models/calculator_row.dart';
+import 'package:weight_mate/models/saved_product.dart';
+import 'package:weight_mate/services/product_service.dart';
 import 'package:weight_mate/services/storage_service.dart';
 
 class CreateBillViewModel extends BaseViewModel {
+  final _productService = locator<ProductService>();
+
   final List<BillItem> _items = <BillItem>[];
   String _searchQuery = '';
+
+  List<QuickAddProduct> _quickProducts = [];
 
   List<BillItem> get items => _items;
   String get searchQuery => _searchQuery;
@@ -20,17 +26,35 @@ class CreateBillViewModel extends BaseViewModel {
 
   int get itemCount => _items.length;
 
-  static const List<QuickAddProduct> quickProducts = [
-    QuickAddProduct(name: 'Eggs', icon: Icons.egg_alt, price: 12, unit: UnitType.dozen),
-    QuickAddProduct(name: 'Wheat', icon: Icons.eco, price: 24),
-    QuickAddProduct(name: 'Sugar', icon: Icons.science, price: 45),
-    QuickAddProduct(name: 'Coffee', icon: Icons.coffee_maker, price: 120),
-    QuickAddProduct(name: 'Oil', icon: Icons.local_drink, price: 180),
-  ];
+  Future<void> init() async {
+    final savedProducts = await _productService.getAllProducts();
+    _quickProducts = savedProducts.map((p) {
+      return QuickAddProduct(
+        name: p.name,
+        icon: Icons.inventory_2,
+        price: p.price,
+        unit: _mapPriceType(p.priceType),
+      );
+    }).toList();
+    notifyListeners();
+  }
+
+  UnitType _mapPriceType(PriceType type) {
+    switch (type) {
+      case PriceType.kg:
+        return UnitType.kg;
+      case PriceType.gm:
+        return UnitType.gm;
+      case PriceType.piece:
+        return UnitType.piece;
+      case PriceType.dozen:
+        return UnitType.dozen;
+    }
+  }
 
   List<QuickAddProduct> get filteredProducts {
-    if (_searchQuery.isEmpty) return quickProducts;
-    return quickProducts
+    if (_searchQuery.isEmpty) return _quickProducts;
+    return _quickProducts
         .where((p) => p.name.toLowerCase().contains(_searchQuery.toLowerCase()))
         .toList();
   }

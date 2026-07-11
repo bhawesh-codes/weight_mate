@@ -9,6 +9,8 @@ import 'package:weight_mate/models/calculator_row.dart';
 import 'package:weight_mate/ui/common/app_colors.dart';
 import 'create_bill_viewmodel.dart';
 
+import 'package:weight_mate/base/utils/ui_helper.dart';
+
 class CreateBillView extends StackedView<CreateBillViewModel> {
   const CreateBillView({Key? key}) : super(key: key);
 
@@ -24,9 +26,9 @@ class CreateBillView extends StackedView<CreateBillViewModel> {
         titleSpacing: 0,
         title: Row(
           children: [
-            SizedBox(width: 16.w),
+            UIHelper.horizontalSpaceMedium,
             Icon(Icons.storefront, color: kcPrimaryColor, size: 28.r),
-            SizedBox(width: 8.w),
+            UIHelper.horizontalSpaceSmall,
             const TitleTextWidget(
               text: 'WeightMate',
               color: kcPrimaryColor,
@@ -46,7 +48,7 @@ class CreateBillView extends StackedView<CreateBillViewModel> {
             ),
             child: Icon(Icons.search, size: 20.r, color: kcLightSecondaryText),
           ),
-          SizedBox(width: 8.w),
+          UIHelper.horizontalSpaceSmall,
         ],
       ),
       body: _BillBodyWithScroll(viewModel: viewModel),
@@ -99,7 +101,7 @@ class CreateBillView extends StackedView<CreateBillViewModel> {
                   ],
                 ),
               ),
-              SizedBox(width: 16.w),
+              UIHelper.horizontalSpaceMedium,
               Expanded(
                 child: SizedBox(
                   height: 56.h,
@@ -134,6 +136,11 @@ class CreateBillView extends StackedView<CreateBillViewModel> {
   @override
   CreateBillViewModel viewModelBuilder(BuildContext context) =>
       CreateBillViewModel();
+
+  @override
+  void onViewModelReady(CreateBillViewModel viewModel) {
+    viewModel.init();
+  }
 }
 
 class _BillBodyWithScroll extends StatefulWidget {
@@ -179,6 +186,19 @@ class _BillBodyWithScrollState extends State<_BillBodyWithScroll> {
     _prevItemCount = currentCount;
   }
 
+  String _unitSuffix(UnitType unit) {
+    switch (unit) {
+      case UnitType.kg:
+        return '/kg';
+      case UnitType.gm:
+        return '/gm';
+      case UnitType.piece:
+        return '/pc';
+      case UnitType.dozen:
+        return '/doz';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -186,7 +206,7 @@ class _BillBodyWithScrollState extends State<_BillBodyWithScroll> {
       padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 160.h),
       children: [
         _buildQuickAddSection(),
-        SizedBox(height: 24.h),
+        UIHelper.verticalSpace(24.h),
         _buildBillSummarySection(),
       ],
     );
@@ -203,29 +223,42 @@ class _BillBodyWithScrollState extends State<_BillBodyWithScroll> {
           fontWeight: FontWeight.w500,
           color: kcLightPrimaryText,
         ),
-        SizedBox(height: 12.h),
+        UIHelper.verticalSpace(12.h),
         SizedBox(
-          height: 48.h,
+          height: 68.h,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: viewModel.filteredProducts.length,
-            separatorBuilder: (_, __) => SizedBox(width: 8.w),
+            separatorBuilder: (_, __) => UIHelper.horizontalSpaceSmall,
             itemBuilder: (context, index) {
               final product = viewModel.filteredProducts[index];
-              return GestureDetector(
-                onTap: () => viewModel.addProduct(product),
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                  decoration: BoxDecoration(
-                    color: kcPrimaryContainer,
-                    borderRadius: BorderRadius.circular(24.r),
-                  ),
-                  child: BodyTextWidget(
-                    text: product.name,
-                    textType: TextType.small,
-                    color: kcPrimaryColor,
-                    fontWeight: FontWeight.w600,
+              return Center(
+                child: GestureDetector(
+                  onTap: () => viewModel.addProduct(product),
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      color: kcPrimaryContainer,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BodyTextWidget(
+                          text: product.name,
+                          textType: TextType.small,
+                          color: kcPrimaryColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        UIHelper.verticalSpaceXXSmall,
+                        BodyTextWidget(
+                          text: '₹${product.price.toStringAsFixed(2)}${_unitSuffix(product.unit)}',
+                          textType: TextType.xxsmall,
+                          color: kcPrimaryColor.withValues(alpha: 0.7),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -249,7 +282,7 @@ class _BillBodyWithScrollState extends State<_BillBodyWithScroll> {
               fontWeight: FontWeight.w500,
               color: kcLightPrimaryText,
             ),
-            SizedBox(width: 8.w),
+            UIHelper.horizontalSpaceSmall,
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
               decoration: BoxDecoration(
@@ -265,19 +298,43 @@ class _BillBodyWithScrollState extends State<_BillBodyWithScroll> {
             ),
           ],
         ),
-        SizedBox(height: 12.h),
-        ...List.generate(viewModel.items.length, (index) {
-          final item = viewModel.items[index];
-          return _BillItemCard(
-            item: item,
-            onNameChanged: (v) => viewModel.updateItemName(index, v),
-            onPriceChanged: (v) => viewModel.updateItemPrice(index, v),
-            onUnitChanged: (v) => viewModel.updateItemUnit(index, v),
-            onWeightChanged: (v) => viewModel.updateWeight(index, v),
-            onRemove: () => viewModel.removeItem(index),
-          );
-        }),
-        SizedBox(height: 16.h),
+        UIHelper.verticalSpace(12.h),
+        if (viewModel.items.isEmpty)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 32.h),
+            child: Center(
+              child: Column(
+                children: [
+                  Icon(Icons.playlist_add, size: 48.r, color: kcLightHintText),
+                  UIHelper.verticalSpace(12.h),
+                  const BodyTextWidget(
+                    text: 'No items added yet',
+                    textType: TextType.small,
+                    color: kcLightSecondaryText,
+                  ),
+                  UIHelper.verticalSpace(4.h),
+                  const BodyTextWidget(
+                    text: 'Tap a product above or add a custom item',
+                    textType: TextType.xxsmall,
+                    color: kcLightHintText,
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          ...List.generate(viewModel.items.length, (index) {
+            final item = viewModel.items[index];
+            return _BillItemCard(
+              item: item,
+              onNameChanged: (v) => viewModel.updateItemName(index, v),
+              onPriceChanged: (v) => viewModel.updateItemPrice(index, v),
+              onUnitChanged: (v) => viewModel.updateItemUnit(index, v),
+              onWeightChanged: (v) => viewModel.updateWeight(index, v),
+              onRemove: () => viewModel.removeItem(index),
+            );
+          }),
+        UIHelper.verticalSpaceMedium,
         _buildAddCustomItemButton(),
       ],
     );
@@ -292,7 +349,7 @@ class _BillBodyWithScrollState extends State<_BillBodyWithScroll> {
         decoration: BoxDecoration(
           border: Border.all(
             color: kcLightBorder,
-            width: 2,
+            width: 1.5,
           ),
           borderRadius: BorderRadius.circular(20.r),
         ),
@@ -300,12 +357,12 @@ class _BillBodyWithScrollState extends State<_BillBodyWithScroll> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.add_circle_outline,
-                color: kcLightSecondaryText, size: 20.r),
-            SizedBox(width: 8.w),
+                color: kcPrimaryColor, size: 20.r),
+            UIHelper.horizontalSpaceSmall,
             const BodyTextWidget(
               text: 'Add Custom Item',
               textType: TextType.small,
-              color: kcLightSecondaryText,
+              color: kcPrimaryColor,
               fontWeight: FontWeight.w600,
             ),
           ],
@@ -372,20 +429,17 @@ class _BillItemCard extends StatelessWidget {
                 child: Container(
                   width: 32.w,
                   height: 32.h,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: kcErrorColor.withValues(alpha: 0.08),
-                  ),
+                  alignment: Alignment.center,
                   child: Icon(
                     Icons.close,
-                    size: 16.r,
-                    color: kcErrorColor,
+                    size: 18.r,
+                    color: kcLightSecondaryText,
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.h),
+          UIHelper.verticalSpace(12.h),
           Row(
             children: [
               Expanded(
@@ -393,11 +447,11 @@ class _BillItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     BodyTextWidget(
-                      text: 'Weight ($unitLabel)',
-                      textType: TextType.xsmall,
-                      color: kcLightSecondaryText,
-                    ),
-                    SizedBox(height: 4.h),
+text: 'Weight',
+                    textType: TextType.xsmall,
+                    color: kcLightSecondaryText,
+                  ),
+                  UIHelper.verticalSpace(4.h),
                     Container(
                       decoration: BoxDecoration(
                         color: kcLightSurfaceVariant,
@@ -434,13 +488,14 @@ class _BillItemCard extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            width: 40.w,
+                            padding: EdgeInsets.symmetric(horizontal: 8.w),
                             height: 40.h,
                             alignment: Alignment.center,
-                            child: Icon(
-                              Icons.scale,
-                              size: 18.r,
+                            child: BodyTextWidget(
+                              text: unitLabel,
+                              textType: TextType.xsmall,
                               color: kcPrimaryColor,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -452,20 +507,25 @@ class _BillItemCard extends StatelessWidget {
               SizedBox(width: 12.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const BodyTextWidget(
                     text: 'Subtotal',
                     textType: TextType.xsmall,
                     color: kcLightSecondaryText,
                   ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    '₹${item.subtotal.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
-                      color: kcPrimaryColor,
+                  UIHelper.verticalSpace(4.h),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      '₹${item.subtotal.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w700,
+                        color: kcPrimaryColor,
+                      ),
                     ),
                   ),
                 ],
@@ -487,7 +547,7 @@ class _BillItemCard extends StatelessWidget {
           color: kcLightPrimaryText,
           fontWeight: FontWeight.w600,
         ),
-        SizedBox(height: 2.h),
+        UIHelper.verticalSpaceXXSmall,
         BodyTextWidget(
           text: 'Price: ₹${item.price.toStringAsFixed(2)} / $unitLabel',
           textType: TextType.xsmall,
@@ -530,7 +590,7 @@ class _BillItemCard extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 8.h),
+        UIHelper.verticalSpace(8.h),
         Row(
           children: [
             SizedBox(
@@ -568,7 +628,7 @@ class _BillItemCard extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 8.w),
+            UIHelper.horizontalSpaceSmall,
             Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
