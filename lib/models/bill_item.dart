@@ -25,6 +25,7 @@ class BillItem {
   bool isEditing;
   String priceText;
   String weightText;
+  UnitType weightUnit;
 
   BillItem({
     required this.name,
@@ -36,15 +37,23 @@ class BillItem {
     this.isEditing = false,
     this.priceText = '',
     this.weightText = '',
+    this.weightUnit = UnitType.kg,
   });
 
   void calculateSubtotal() {
-    subtotal = switch (unit) {
-      UnitType.kg => price * weight,
-      UnitType.gm => (price / 1000) * weight,
-      UnitType.piece => price * weight,
-      UnitType.dozen => price * weight,
-    };
+    if (unit == UnitType.piece) {
+      subtotal = weightUnit == UnitType.dozen
+          ? (price * 12) * weight
+          : price * weight;
+    } else if (unit == UnitType.dozen) {
+      subtotal = weightUnit == UnitType.piece
+          ? (price / 12) * weight
+          : price * weight;
+    } else if (weightUnit == UnitType.gm) {
+      subtotal = (price / 1000) * weight;
+    } else {
+      subtotal = price * weight;
+    }
   }
 
   Map<String, dynamic> toJson() => {
@@ -53,6 +62,7 @@ class BillItem {
         'unit': unit.index,
         'weight': weight,
         'subtotal': subtotal,
+        'weightUnit': weightUnit.index,
       };
 
   factory BillItem.fromJson(Map<String, dynamic> json) => BillItem(
@@ -61,5 +71,8 @@ class BillItem {
         unit: UnitType.values[json['unit'] as int],
         weight: (json['weight'] as num).toDouble(),
         subtotal: (json['subtotal'] as num).toDouble(),
+        weightUnit: json['weightUnit'] != null
+            ? UnitType.values[json['weightUnit'] as int]
+            : UnitType.kg,
       );
 }

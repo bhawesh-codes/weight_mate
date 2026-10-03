@@ -12,6 +12,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:weight_mate/models/bill.dart';
 import 'package:weight_mate/models/calculator_row.dart';
 import 'package:weight_mate/services/bill_history_service.dart';
+import 'package:weight_mate/ui/common/currency_helper.dart';
 
 class GenerateBillViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
@@ -172,7 +173,7 @@ class GenerateBillViewModel extends BaseViewModel {
                     ),
                   ),
                   pw.Text(
-                    '₹ ${bill.grandTotal.toStringAsFixed(2)}',
+                    '$currencySymbol ${bill.grandTotal.toStringAsFixed(2)}',
                     style: pw.TextStyle(
                       fontSize: 16,
                       fontWeight: pw.FontWeight.bold,

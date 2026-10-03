@@ -12,6 +12,9 @@ class SettingsViewModel extends BaseViewModel {
   String get storeName => _storageService.storeName;
   String get storeAddress => _storageService.storeAddress;
   String get storePhone => _storageService.storePhone;
+  String get currencyCode => _storageService.currencyCode;
+  String get currencyName => _storageService.currencyName;
+  String get currencySymbol => _storageService.currencySymbol;
 
   void onBack() {
     _navigationService.back();
@@ -26,7 +29,10 @@ class SettingsViewModel extends BaseViewModel {
     _navigationService.navigateToQrPaymentSetupView();
   }
 
-  void openCurrency() {}
+  Future<void> setCurrency(String code) async {
+    await _storageService.saveCurrency(code);
+    notifyListeners();
+  }
 
   void openLanguage() {}
 

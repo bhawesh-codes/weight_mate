@@ -69,6 +69,7 @@ class CreateBillViewModel extends BaseViewModel {
       name: product.name,
       price: product.price,
       unit: product.unit,
+      weightUnit: product.unit,
       isHighlighted: _items.isEmpty,
     ));
     notifyListeners();
@@ -79,6 +80,7 @@ class CreateBillViewModel extends BaseViewModel {
       name: '',
       price: 0,
       unit: UnitType.kg,
+      weightUnit: UnitType.kg,
       isHighlighted: _items.isEmpty,
       isEditing: true,
     ));
@@ -119,6 +121,14 @@ class CreateBillViewModel extends BaseViewModel {
     if (index >= 0 && index < _items.length) {
       _items[index].weightText = text;
       _items[index].weight = double.tryParse(text) ?? 0;
+      _items[index].calculateSubtotal();
+      notifyListeners();
+    }
+  }
+
+  void updateWeightUnit(int index, UnitType unit) {
+    if (index >= 0 && index < _items.length) {
+      _items[index].weightUnit = unit;
       _items[index].calculateSubtotal();
       notifyListeners();
     }

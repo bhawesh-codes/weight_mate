@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weight_mate/models/currency.dart';
 
 class StorageService {
   static const _storeNameKey = 'store_name';
@@ -6,18 +7,23 @@ class StorageService {
   static const _storePhoneKey = 'store_phone';
   static const _qrCodePathKey = 'qr_code_path';
   static const _isFirstTimeKey = 'is_first_time';
+  static const _currencyCodeKey = 'currency_code';
 
   String _storeName = 'Your Store Name';
   String _storeAddress = 'Your Location';
   String _storePhone = '9841234567';
   String? _qrCodePath;
   bool _isFirstTime = true;
+  String _currencyCode = 'NPR';
 
   String get storeName => _storeName;
   String get storeAddress => _storeAddress;
   String get storePhone => _storePhone;
   String? get qrCodePath => _qrCodePath;
   bool get isFirstTime => _isFirstTime;
+  String get currencyCode => _currencyCode;
+  String get currencySymbol => Currency.byCode(_currencyCode).symbol;
+  String get currencyName => Currency.byCode(_currencyCode).name;
 
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
@@ -26,6 +32,7 @@ class StorageService {
     _storePhone = prefs.getString(_storePhoneKey) ?? _storePhone;
     _qrCodePath = prefs.getString(_qrCodePathKey);
     _isFirstTime = prefs.getBool(_isFirstTimeKey) ?? true;
+    _currencyCode = prefs.getString(_currencyCodeKey) ?? _currencyCode;
   }
 
   Future<void> setFirstTimeDone() async {
@@ -55,5 +62,15 @@ class StorageService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_qrCodePathKey);
     _qrCodePath = null;
+  }
+
+  Future<void> saveCurrency(String code) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_currencyCodeKey, code);
+    _currencyCode = code;
+  }
+
+  String formatPrice(double amount) {
+    return '$currencySymbol${amount.toStringAsFixed(2)}';
   }
 }

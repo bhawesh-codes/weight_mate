@@ -77,8 +77,9 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void openShopProfile() {
-    _navigationService.navigateToShopProfileView();
+  Future<void> openShopProfile() async {
+    await _navigationService.navigateToShopProfileView();
+    notifyListeners();
   }
 
   void openQuickCalculator() {
