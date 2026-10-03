@@ -1,4 +1,4 @@
-package com.example.weight_mate
+package com.bhawesh.weight_mate
 
 import io.flutter.embedding.android.FlutterActivity
 
